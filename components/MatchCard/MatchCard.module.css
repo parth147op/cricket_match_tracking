@@ -1,0 +1,40 @@
+/* MatchCard.module.css */
+.matchCard {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 15px 0;
+    background-color: white;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    width: 90%; /* Adjust width as per your layout */
+    color:black;
+}
+
+.matchCard:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.date {
+    color: #555;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+.teams {
+    font-size: 18px;
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.scores {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.status {
+    font-size: 14px;
+    color: #888;
+}

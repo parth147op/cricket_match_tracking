@@ -1,9 +1,164 @@
 .createTeamContainer {
     background-color: #f8f9fa; /* Light grey background */
     padding: 20px;
+    padding-bottom: 100px;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    max-width: 600px;
-    margin: 20px auto;
+    max-width: 90%;
+    margin: 40px auto;
     color:black;
 }
+
+.createTeamHeading{
+    font-size: 1.8em;
+    color: #333; /* Dark color for the heading */
+    margin-bottom: 20px;
+}
+
+.teamNameForm{
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    margin-bottom: 20px;
+
+}
+
+.stylishLabel {
+    display: block; /* Makes the label take up the full width */
+    margin-bottom: 5px; /* Space between label and input */
+    font-size: 1.1em; /* Slightly larger font size */
+    color: #333; /* Dark color for better readability */
+    font-weight: 600; /* Makes the text slightly bolder */
+    margin-top:18px;
+}
+
+
+.stylishInput {
+    width: 50%; /* Full width */
+    padding: 10px 15px; /* Padding for better text visibility */
+    margin: 10px 0; /* Margin for spacing */
+    border: 1px solid #ccc; /* Subtle border */
+    border-radius: 4px; /* Rounded corners */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1); /* Inner shadow for depth */
+    transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transition for focus */
+}
+
+.stylishInput:focus {
+    outline: none; /* Removes the default focus outline */
+    border-color: #007bff; /* Highlight color when focused */
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1), 0 0 8px rgba(0, 123, 255, 0.6); /* Outer glow effect */
+}
+
+.teambutton {
+    background-color: #007bff; /* Primary color, you can choose any */
+    color: white; /* Text color */
+    padding: 10px 20px; /* Top and Bottom, Left and Right padding */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 1em; /* Font size */
+    cursor: pointer; /* Cursor changes to hand symbol */
+    transition: background-color 0.3s; /* Smooth transition for hover effect */
+    text-align: center; /* Center text */
+    display: inline-block; /* Allows setting padding and width */
+    margin:10px;
+    text-decoration: none; /* Removes underline if you use <a> tag */
+}
+
+.teambutton:hover, .teambutton:focus {
+    background-color: #0056b3; /* Darker shade for hover and focus */
+    outline: none; /* Removes outline on focus */
+}
+
+/* .playerFormContainer{
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    margin-bottom: 20px;
+    background-color: #607d9b; 
+    padding: 20px;
+    border-radius: 10px;
+} */
+
+.playerFormContainer {
+    display: flex;
+    flex-direction: column; /* Change to column for better form layout */
+    gap: 20px; /* Adjust gap for spacing between elements */
+    margin-bottom: 20px;
+    background-color: #f4f4f4; /* Soft background color */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    width: 90%; /* Adjust width as needed */
+    /* max-width: 500px; Maximum width of the form */
+    margin: auto; /* Center the form */
+    margin-top:20px;
+}
+
+.playerFormContainer label {
+    font-size: 0.9em;
+    color: #333; /* Darker color for labels */
+    margin-bottom: 5px; /* Space between label and input/select */
+}
+
+.playerFormContainer input, .playerFormContainer select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+    width: 100%; /* Full width inputs and selects */
+}
+
+.playerFormContainer input[type="number"] {
+    -moz-appearance: textfield; /* Removes the spinner */
+}
+
+.playerFormContainer input[type="number"]::-webkit-inner-spin-button,
+.playerFormContainer input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none; /* Removes the spinner for webkit browsers */
+}
+
+.playerFormContainer button {
+    padding: 10px 20px;
+    background-color: #007bff; /* Primary button color */
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-size: 1em;
+    align-self: flex-start; /* Align button to the start of the container */
+}
+
+.playerFormContainer button:hover {
+    background-color: #0056b3; /* Darker shade for hover effect */
+}
+
+.playerbuttons{
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+.addPlayerButton {
+    background-color: #28a745; /* A green color, typically associated with 'add' actions */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    transition: background-color 0.3s;
+    margin-top: 30px; /* Add some margin at the top */
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    text-decoration: none;
+}
+
+.addPlayerButton:hover {
+    background-color: #218838; /* A slightly darker shade for the hover effect */
+}
+
