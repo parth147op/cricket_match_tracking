@@ -12,7 +12,10 @@
 
 .playerList {
     list-style: none;
-    padding: 0;
+    padding: 10px;
+    display:flex;
+    flex-wrap:wrap;
+    justify-content: space-between;
 }
 
 .playerItem {
@@ -39,4 +42,15 @@
 
 .closeButton:hover {
     background-color: #003399; /* Darker shade for hover effect */
+}
+
+.addButton{
+    padding: 5px 10px;
+    border: none;
+    background-color: green;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin:10px;
 }

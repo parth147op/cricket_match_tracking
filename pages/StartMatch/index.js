@@ -1,66 +1,76 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './StartMatch.module.css';
 import PlayerSelectionModal from '@/components/PlayerSelectionModal';
 import TeamInput from '@/components/TeamInput';
-import { render } from 'react-dom';
-
+import { useRouter } from 'next/router';
+import axios from 'axios';
 const StartMatch = () => {
+    const router = useRouter();
     const [teamAName, setTeamAName] = useState('');
     const [teamBName, setTeamBName] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedTeam, setSelectedTeam] = useState(null);
-    const [players, setPlayers] = useState([]); // Replace with actual players data
-    const [selectedPlayers, setSelectedPlayers] = useState([]);
+
     const [selectedTeamAPlayers, setSelectedTeamAPlayers] = useState([]);
     const [selectedTeamBPlayers, setSelectedTeamBPlayers] = useState([]);
     const [swapPlayer, setSwapPlayer] = useState(null); // State to hold the player selected for swapping
+    const [teamAPlayers, setTeamAPlayers] = useState([]);
+    const [teamBPlayers, setTeamBPlayers] = useState([]);
+    const [teamACaptain, setTeamACaptain] = useState(null);
+    const [teamBCaptain, setTeamBCaptain] = useState(null);
+    const [teamAWicketKeeper, setTeamAWicketKeeper] = useState(null);
+    const [teamBWicketKeeper, setTeamBWicketKeeper] = useState(null);
+    const fetchPlayers = async (teamName, team) => {
+        try {
+            const response = await axios.get(`http://localhost:5000/api/v1/team/getAllPlayer/${teamName}`);
+            let fetchedPlayers = []
+            response.data.data.teamPlayers.map(element => {
+                fetchedPlayers.push({
+                    id: element._id,
+                    name: element.fullName,
+                })
+            });
+            fetchedPlayers.map((player) => {
+                player.isPlaying = true;
+                player.battingOrder = null;
+                player.isCaptain = false;
+                player.isWicketKeeper = false;
+            })
+            // const fetchedPlayers = response.data.data.teamPlayers.map(element => ({
+            //     id: element._id,
+            //     name: element.fullName,
+            // }));
+            // fetchedPlayers.map((player) => {
+            //     player.isPlaying = true;
+            //     player.battingOrder = null;
+            //     player.isCaptain = false;
+            //     player.isWicketKeeper = false;
+            // })
+            console.log(fetchedPlayers);
+            if (team === 'Team A') {
+                setTeamAPlayers(fetchedPlayers); // Set the players for the currently selected team
+            }
 
-    const teamAPlayers = [
-        { id: 1, name: 'Team A Player 1' },
-        { id: 2, name: 'Team A Player 2' },
-        { id: 3, name: 'Team A Player 3' },
-        { id: 4, name: 'Team A Player 4' },
-        { id: 5, name: 'Team A Player 5' },
-        { id: 6, name: 'Team A Player 6' },
-        { id: 7, name: 'Team A Player 7' },
-        { id: 8, name: 'Team A Player 8' },
-        { id: 9, name: 'Team A Player 9' },
-        { id: 10, name: 'Team A Player 10' },
-        { id: 11, name: 'Team A Player 11' },
-        { id: 12, name: 'Team A Player 12' },
-        { id: 13, name: 'Team A Player 13' },
-        { id: 14, name: 'Team A Player 14' },
-        { id: 15, name: 'Team A Player 15' },
-    ]
+            else if (team === 'Team B')
+                setTeamBPlayers(fetchedPlayers); // Set the players for the currently selected team
 
-    const teamBPlayers = [
-        { id: 1, name: 'Team B Player 1' },
-        { id: 2, name: 'Team B Player 2' },
-        { id: 3, name: 'Team B Player 3' },
-        { id: 4, name: 'Team B Player 4' },
-        { id: 5, name: 'Team B Player 5' },
-        { id: 6, name: 'Team B Player 6' },
-        { id: 7, name: 'Team B Player 7' },
-        { id: 8, name: 'Team B Player 8' },
-        { id: 9, name: 'Team B Player 9' },
-        { id: 10, name: 'Team B Player 10' },
-        { id: 11, name: 'Team B Player 11' },
-        { id: 12, name: 'Team B Player 12' },
-        { id: 13, name: 'Team B Player 13' },
-        { id: 14, name: 'Team B Player 14' },
-        { id: 15, name: 'Team B Player 15' },
-    ]
+        } catch (error) {
+            console.error('Failed to fetch players:', error);
+            // Handle the error appropriately
 
+        }
+    };
     const handleOpenModal = (team) => {
         setSelectedTeam(team);
-        setPlayers(team === 'Team A' ? teamAPlayers : teamBPlayers);
+        console.log(team);
+        fetchPlayers(team === 'Team A' ? teamAName : teamBName, team);
         setIsModalOpen(true);
     };
 
     const handleCloseModal = () => {
         setIsModalOpen(false);
         setSelectedTeam(null);
-        setSelectedPlayers([]);
+        // setSelectedPlayers([]);
     };
 
     const handleSelectPlayer = (player) => {
@@ -88,18 +98,33 @@ const StartMatch = () => {
         }
         else {
             // If a player is already selected, perform the swap
-            const teamPlayers = team === 'Team A' ? selectedTeamAPlayers : selectedTeamBPlayers;
-            const index1 = teamPlayers.findIndex(p => p.id === swapPlayer.id);
-            const index2 = teamPlayers.findIndex(p => p.id === selectedPlayer.id);
+            let updatedPlayers;
+            if(team === 'Team A'){
+                const index1 = selectedTeamAPlayers.findIndex(p => p.id === swapPlayer.id);
+                const index2 = selectedTeamAPlayers.findIndex(p => p.id === selectedPlayer.id);
 
-            //swap the players in the array
-            const newTeamPlayers = [...teamPlayers];
-            [newTeamPlayers[index1], newTeamPlayers[index2]] = [newTeamPlayers[index2], newTeamPlayers[index1]];
+                updatedPlayers = [...selectedTeamAPlayers];
+                [updatedPlayers[index1], updatedPlayers[index2]] = [updatedPlayers[index2], updatedPlayers[index1]];
+                setSelectedTeamAPlayers(updatedPlayers);
+            }
+            else if(team === 'Team B'){
+                const index1 = selectedTeamBPlayers.findIndex(p => p.id === swapPlayer.id);
+                const index2 = selectedTeamBPlayers.findIndex(p => p.id === selectedPlayer.id);
+
+                updatedPlayers = [...selectedTeamBPlayers];
+                [updatedPlayers[index1], updatedPlayers[index2]] = [updatedPlayers[index2], updatedPlayers[index1]];
+                setSelectedTeamBPlayers(updatedPlayers);
+            }
+            updatedPlayers = updatedPlayers.map((player,index)=>({
+                ...player,
+                battingOrder: index+1
+            }))
+            console.log(updatedPlayers)
             // Update the state with the new players array
             if (team === 'Team A') {
-                setSelectedTeamAPlayers(newTeamPlayers);
-            } else {
-                setSelectedTeamBPlayers(newTeamPlayers);
+                setSelectedTeamAPlayers(updatedPlayers);
+            } else if(team === 'Team B'){
+                setSelectedTeamBPlayers(updatedPlayers);
             }
 
             // Reset the swapPlayer state
@@ -114,13 +139,70 @@ const StartMatch = () => {
             setSelectedTeamBPlayers(selectedTeamBPlayers.filter(p => p && p.id !== player.id));
         }
     };
+    const handleSetCaptain = (playerId, team) => {
+        console.log('Captain set')
+        if (team === 'Team A') {
+            // Create a new array with updated isCaptain flags
+            const updatedPlayers = selectedTeamAPlayers.map(player => ({
+                ...player,
+                isCaptain: player.id === playerId
+            }));
+    
+            console.log(updatedPlayers);
+            setSelectedTeamAPlayers(updatedPlayers); // Update the state with the new array
+        }
+        else if(team === 'Team B'){
+            // Create a new array with updated isCaptain flags
+            const updatedPlayers = selectedTeamBPlayers.map(player => ({
+                ...player,
+                isCaptain: player.id === playerId
+            }));
+    
+            console.log(updatedPlayers);
+            setSelectedTeamBPlayers(updatedPlayers); // Update the state with the new array
+        }
+    };
+
+    const handleSetWicketKeeper = (playerId, team) => {
+        console.log('Wicket Keeper set')
+        if(team === 'Team A'){
+            // Create a new array with updated isWicketKeeper flags
+            const updatedPlayers = selectedTeamAPlayers.map(player => ({
+                ...player,
+                isWicketKeeper: player.id === playerId
+            }));
+    
+            console.log(updatedPlayers);
+            setSelectedTeamAPlayers(updatedPlayers); // Update the state with the new array
+        }
+        else if(team === 'Team B'){
+            // Create a new array with updated isWicketKeeper flags
+            const updatedPlayers = selectedTeamBPlayers.map(player => ({
+                ...player,
+                isWicketKeeper: player.id === playerId
+            }));
+    
+            console.log(updatedPlayers);
+            setSelectedTeamBPlayers(updatedPlayers); // Update the state with the new array
+        }
+    };
 
     const renderSelectedPlayers = (players, team) => (
         <ul className={styles.playerList}>
-            {players.map(player => (
-                player && (<li key={player.id} className={`${styles.playerItem} ${swapPlayer && swapPlayer.id === player.id ? styles.selectedForSwap : ''}`}
-                    onClick={() => handleSwapPlayer(player, team)}>
-                    {player.name}
+            {players.map((player,index) => (
+                player && (<li key={player.id} className={`${styles.playerItem} ${swapPlayer && swapPlayer.id === player.id ? styles.selectedForSwap : ''}`}>
+                    <span className={styles.playerOrderNumber}>{index + 1}</span> {/* Sr. No. */}
+                    <span onClick={() => handleSwapPlayer(player, team)}></span>
+                    <span onClick={() => handleSwapPlayer(player, team)}>
+                        {player.name}</span>
+                    <button
+                        className={`${styles.captainButton} ${player.isCaptain === true ? styles.selectedRole : ''}`}
+                        onClick={() => handleSetCaptain(player.id, team)}
+                    >C</button>
+                    <button
+                        className={`${styles.wicketKeeperButton} ${player.isWicketKeeper === true ? styles.selectedRole : ''}`}
+                        onClick={() => handleSetWicketKeeper(player.id, team)}
+                    >WK</button>
                     <button
                         onClick={() => handleRemovePlayer(player, team)}
                         className={styles.removePlayerButton} // Add appropriate styling
@@ -132,6 +214,40 @@ const StartMatch = () => {
         </ul>
     );
 
+    const handleStartButton = async () => {
+        // On clicking the start button, firstly new match entry will be created in the matches collection. Using the matchID, the selected players will be added to the playerMatchParticipation collection.
+        //schema of playerMatchParticipation collection consist of matchID, playerID, isPlaying,battingOrder,isCaptain,isWicketKeeper;
+        const response = await axios.post('http://localhost:5000/api/v1/match/createMatch', {
+            teamAName: teamAName,
+            teamBName: teamBName,
+        })
+        console.log(response.data.data.newMatch._id);
+        const matchID = response.data.data.newMatch._id;
+        if (matchID) {
+            const playerMatchParticipationPromises = [];
+            selectedTeamAPlayers.forEach(player => {
+                playerMatchParticipationPromises.push(axios.post(`http://localhost:5000/api/v1/match/addPlayers/${matchID}`, {
+                    playerID: player.id,
+                    isPlaying: true,
+                    battingOrder: player.battingOrder,
+                    isCaptain: player.isCaptain,
+                    isWicketKeeper: player.isWicketKeeper
+                }))
+            })
+            selectedTeamBPlayers.forEach(player => {
+                playerMatchParticipationPromises.push(axios.post(`http://localhost:5000/api/v1/match/addPlayers/${matchID}`, {
+                    playerID: player.id,
+                    isPlaying: true,
+                    battingOrder: player.battingOrder,
+                    isCaptain: player.isCaptain,
+                    isWicketKeeper: player.isWicketKeeper
+                }))
+            })
+            await Promise.all(playerMatchParticipationPromises);
+        }
+        router.push(`/match/${matchID}`);
+        
+    }
     return (
         <div>
             <div className={styles.startMatch}>
@@ -147,7 +263,7 @@ const StartMatch = () => {
                 </div>
                 <div className={styles.vs}>vs</div>
                 <div className={styles.teamInputDiv}>
-                    <TeamInput     
+                    <TeamInput
                         label="Team B"
                         value={teamBName}
                         onChange={setTeamBName}
@@ -157,7 +273,7 @@ const StartMatch = () => {
                 </div>
                 <PlayerSelectionModal
                     isOpen={isModalOpen}
-                    players={players}
+                    players={selectedTeam === 'Team A' ? teamAPlayers : teamBPlayers}
                     selectedPlayers={selectedTeam === 'Team A' ? selectedTeamAPlayers : selectedTeamBPlayers}
                     onSelect={handleSelectPlayer}
                     onClose={handleCloseModal}
@@ -180,7 +296,7 @@ const StartMatch = () => {
             </div>
 
             <div className={styles.startMatchButtonContainer}>
-                <button className={styles.startMatchButton}>Start Match</button>
+                <button className={styles.startMatchButton} onClick={handleStartButton}>Start Match</button>
             </div>
         </div>
     );
