@@ -1,20 +1,56 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './MatchDetails.module.css'; // Ensure this path is correct
-
-const MatchDetails = ({ teamAName, teamBName }) => {
+import { useRouter } from 'next/router';
+import axios from 'axios';
+const MatchDetails = () => {
+    const router = useRouter();
+    const {matchID} = router.query;
+    const [teamAName, setTeamAName] = useState('');
+    const [teamBName, setTeamBName] = useState('');
     const [matchType, setMatchType] = useState('custom');
     const [numberOfOvers, setNumberOfOvers] = useState('');
     const [city, setCity] = useState('');
     const [ground, setGround] = useState('');
     const [matchDate, setMatchDate] = useState('');
     const [pitchType, setPitchType] = useState('custom');
-
-    const handleSubmit = (event) => {
+    console.log(matchDate);
+    useEffect( () => {
+        // set teamAName and teamBName in state
+        const fetchMatchDetails = async() => {
+            try{
+                const response = await axios.get(`http://localhost:5000/api/v1/match/get/${matchID}`);
+                setTeamAName(response.data.data.Match.teamAName);
+                setTeamBName(response.data.data.Match.teamBName);
+            }catch(err){
+                console.log(err);
+            }
+        }
+        if (matchID) {
+            fetchMatchDetails();
+        }
+        
+    }, [matchID]);
+    const handleSubmit = async(event) => {
         event.preventDefault();
+        try{
+            const response = await axios.put(`http://localhost:5000/api/v1/match/update/${matchID}`, {
+                teamAName, teamBName, matchType, numberOfOvers, city, ground, matchDate, pitchType
+            })
+            
+            if(response.data.status === 'success'){
+                alert('Match details updated successfully');
+                //redirect to the toss page
+                router.push(`/match/toss/${matchID}`);
+            }
+
+            console.log({
+                teamAName, teamBName, matchType, numberOfOvers, city, ground, matchDate, pitchType
+            });
+        }catch(err){
+            console.log(err);
+        }
         // Add logic to process and send form data
-        console.log({
-            teamAName, teamBName, matchType, numberOfOvers, city, ground, matchDate, pitchType
-        });
+       
     };
 
     return (

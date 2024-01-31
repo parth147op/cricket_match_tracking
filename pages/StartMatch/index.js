@@ -217,35 +217,42 @@ const StartMatch = () => {
     const handleStartButton = async () => {
         // On clicking the start button, firstly new match entry will be created in the matches collection. Using the matchID, the selected players will be added to the playerMatchParticipation collection.
         //schema of playerMatchParticipation collection consist of matchID, playerID, isPlaying,battingOrder,isCaptain,isWicketKeeper;
-        const response = await axios.post('http://localhost:5000/api/v1/match/createMatch', {
+        const response = await axios.post('http://localhost:5000/api/v1/match/create', {
             teamAName: teamAName,
             teamBName: teamBName,
         })
         console.log(response.data.data.newMatch._id);
         const matchID = response.data.data.newMatch._id;
         if (matchID) {
+
             const playerMatchParticipationPromises = [];
             selectedTeamAPlayers.forEach(player => {
-                playerMatchParticipationPromises.push(axios.post(`http://localhost:5000/api/v1/match/addPlayers/${matchID}`, {
+                const playerDetails = {
                     playerID: player.id,
                     isPlaying: true,
                     battingOrder: player.battingOrder,
                     isCaptain: player.isCaptain,
                     isWicketKeeper: player.isWicketKeeper
-                }))
+                }
+                console.log(playerDetails)
+                playerMatchParticipationPromises.push(axios.patch(`http://localhost:5000/api/v1/match/addPlayers/${matchID}`, playerDetails),{ headers: { 'Content-Type': 'application/json' }})
             })
             selectedTeamBPlayers.forEach(player => {
-                playerMatchParticipationPromises.push(axios.post(`http://localhost:5000/api/v1/match/addPlayers/${matchID}`, {
+                playerMatchParticipationPromises.push(axios.patch(`http://localhost:5000/api/v1/match/addPlayers/${matchID}`, {
                     playerID: player.id,
                     isPlaying: true,
                     battingOrder: player.battingOrder,
                     isCaptain: player.isCaptain,
                     isWicketKeeper: player.isWicketKeeper
-                }))
+                }),{ headers: { 'Content-Type': 'application/json' }})
             })
             await Promise.all(playerMatchParticipationPromises);
         }
-        router.push(`/match/${matchID}`);
+        alert('Match Started');
+        router.push({
+            pathname: `/match/${matchID}`,
+    query: { teamAName, teamBName }
+        });
         
     }
     return (
