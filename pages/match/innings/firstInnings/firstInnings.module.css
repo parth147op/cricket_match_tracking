@@ -1,0 +1,149 @@
+.container {
+    max-width: 800px; /* Adjust width as necessary */
+    margin: 0 auto; /* Center the container */
+    padding: 40px;
+    background-color: #fff; /* For better contrast */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle shadow for depth */
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; /* Modern font */
+}
+.matchState {
+    background-color: #f7f7f7; /* Light background for the section */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+    margin-bottom: 30px;
+  }
+  
+  .matchStateTitle {
+    text-align: center;
+    color: #27ae60; /* Cricket green for titles */
+    margin-bottom: 20px;
+    font-size: 1.4rem;
+  }
+  
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 15px; /* Spacing between stats */
+    text-align: center;
+  }
+  
+  .stats label {
+    font-size: 0.9rem;
+    color: #555; /* Darker text for labels */
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+  }
+  /* Add specific styles for batsman, bowler, overInfo, and score if needed */
+.batsman p, .bowler p, .overInfo p, .score p {
+    color: #27ae60; /* Consistent color for all important figures */
+  }
+  .stats p {
+    background-color: #fff;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: inset 0px 1px 3px rgba(0, 0, 0, 0.05);
+    font-size: 1rem;
+    font-weight: bold;
+    color: #333; /* Dark text for emphasis */
+  }
+  
+.title {
+    color: #2c3e50; /* Dark blue for elegance */
+    font-size: 2rem; /* Bigger title */
+    margin-bottom: 1rem;
+    text-align: center; /* Center title */
+}
+
+.matchState, .form {
+    background-color: #ecf0f1; /* Light grey background */
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.matchState p, .form label, .form input, .form select, .form button {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.form label {
+    font-weight: bold; /* Make labels bold */
+    color: #7f8c8d; /* Light grey for labels */
+    margin-bottom: .5rem;
+}
+
+.form input, .form select {
+    padding: 10px;
+    border: 1px solid #bdc3c7; /* Light border */
+    border-radius: 4px;
+    margin-bottom: 20px; /* More space at the bottom */
+}
+
+.form button {
+    padding: 15px 20px;
+    background-color: #27ae60; /* Green color */
+    color: white;
+    font-size: 1rem; /* Larger font size */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.form button:hover {
+    background-color: #2ecc71; /* Slightly lighter green */
+}
+
+.overDeliveries {
+    text-align: center;
+    margin-top: 20px;
+    background-color: #27ae60;
+}
+
+.overTitle {
+    font-size: 1.5rem;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.balls {
+    display: inline-flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px; /* Spacing between balls */
+}
+
+.ball {
+    background-color: #27ae60; /* Cricket green */
+    color: #ffffff;
+    padding: 10px 15px;
+    border-radius: 50%; /* Circular balls */
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.15);
+    width: 40px; /* Fixed width for circles */
+    height: 40px; /* Fixed height for circles */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+/* You might want to style specific types of deliveries differently */
+.ball.wide {
+    background-color: #f1c40f; /* Yellow for wides */
+}
+
+/* Responsive tweaks
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    .title {
+        font-size: 1.5rem;
+    }
+} */

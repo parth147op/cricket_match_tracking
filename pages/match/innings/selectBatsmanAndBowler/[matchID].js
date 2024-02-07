@@ -50,6 +50,31 @@ const Index = () => {
     }
     setIsModalOpen(false)
   };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log(strikerBatsman, nonStrikerBatsman, bowler);
+    if(strikerBatsman && nonStrikerBatsman && bowler){
+
+      //backend call to create a new innings entry updating currentBatsman as strikerBatsman and currentBowler as bowler, battingTeam as teamA and bowlingTeam as teamB
+      // passing the strikerBatsman, nonStrikerBatsman, bowler, inningID, matchID, totalOvers.
+      // Let's for now pass the dummy data for totalOvers as 20, strikerBatsman as "Virat Kohli", nonStrikerBatsman as "Rohit Sharma", bowler as "Mitchell Starc", inningID as 1, matchID as 1, battingTeam as "India", bowlingTeam as "Australia"
+      router.push({
+        pathname: `/match/innings/firstInnings/${matchID}`,
+        query: {
+          totalOvers: 20,
+          strikerBatsman: "Virat Kohli",
+          nonStrikerBatsman: "Rohit Sharma",
+          bowler: "Mitchell Starc",
+          inningID: 1,
+          battingTeam: "India",
+          bowlingTeam: "Australia",
+        },
+      });
+    }
+    else{
+      alert('Please select all players')
+    }
+  }
   return (
     <div className="container mx-auto px-4">
       <form>
@@ -74,7 +99,7 @@ const Index = () => {
         onSelect={handleSelectPlayer}
         onClose={() => setIsModalOpen(false)}
       />
-        <button type="submit" className="btn-primary">Start Match</button>
+        <button type="submit" className="btn-primary" onClick={handleSubmit}>Start Match</button>
       </form>
     </div>
   )
