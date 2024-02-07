@@ -34,11 +34,11 @@ const Toss = () => {
                 tossWinnerName:tossWinner, 
                 tossDecision:decision
             })
-            
+             
             if(response.data.status === 'success'){
                 alert('Toss details updated successfully');
                 //redirect to the toss page
-                router.push(`/match/innings/${matchID}`);
+                router.push(`/match/innings/selectBatsmanAndBowler/${matchID}`);
             }
 
             console.log({

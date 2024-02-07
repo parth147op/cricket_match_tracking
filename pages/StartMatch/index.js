@@ -10,16 +10,11 @@ const StartMatch = () => {
     const [teamBName, setTeamBName] = useState('');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedTeam, setSelectedTeam] = useState(null);
-
     const [selectedTeamAPlayers, setSelectedTeamAPlayers] = useState([]);
     const [selectedTeamBPlayers, setSelectedTeamBPlayers] = useState([]);
     const [swapPlayer, setSwapPlayer] = useState(null); // State to hold the player selected for swapping
     const [teamAPlayers, setTeamAPlayers] = useState([]);
     const [teamBPlayers, setTeamBPlayers] = useState([]);
-    const [teamACaptain, setTeamACaptain] = useState(null);
-    const [teamBCaptain, setTeamBCaptain] = useState(null);
-    const [teamAWicketKeeper, setTeamAWicketKeeper] = useState(null);
-    const [teamBWicketKeeper, setTeamBWicketKeeper] = useState(null);
     const fetchPlayers = async (teamName, team) => {
         try {
             const response = await axios.get(`http://localhost:5000/api/v1/team/getAllPlayer/${teamName}`);
@@ -36,16 +31,6 @@ const StartMatch = () => {
                 player.isCaptain = false;
                 player.isWicketKeeper = false;
             })
-            // const fetchedPlayers = response.data.data.teamPlayers.map(element => ({
-            //     id: element._id,
-            //     name: element.fullName,
-            // }));
-            // fetchedPlayers.map((player) => {
-            //     player.isPlaying = true;
-            //     player.battingOrder = null;
-            //     player.isCaptain = false;
-            //     player.isWicketKeeper = false;
-            // })
             console.log(fetchedPlayers);
             if (team === 'Team A') {
                 setTeamAPlayers(fetchedPlayers); // Set the players for the currently selected team
