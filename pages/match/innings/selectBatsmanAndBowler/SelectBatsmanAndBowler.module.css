@@ -1,4 +1,3 @@
-/* Toss.module.css */
 
 .container {
     max-width: 600px;
@@ -16,7 +15,7 @@
     margin-bottom: 2rem;
 }
 
-.mb-4 {
+.mb4 {
     margin-bottom: 1.5rem;
 }
 
@@ -42,12 +41,12 @@
     margin-top: 0.5rem;
 }
 
-.btn-primary {
+.btnprimary {
     background-color: #28a745;
     border-color: #28a745;
 }
 
-.btn-primary:hover {
+.btnprimary:hover {
     background-color: #218838;
     border-color: #1e7e34;
 }

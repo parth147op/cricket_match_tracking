@@ -8,7 +8,7 @@ const MatchDetails = () => {
     const [teamAName, setTeamAName] = useState('');
     const [teamBName, setTeamBName] = useState('');
     const [matchType, setMatchType] = useState('custom');
-    const [numberOfOvers, setNumberOfOvers] = useState('');
+    const [numberOfOvers, setNumberOfOvers] = useState(0);
     const [city, setCity] = useState('');
     const [ground, setGround] = useState('');
     const [matchDate, setMatchDate] = useState('');
@@ -49,7 +49,7 @@ const MatchDetails = () => {
         }catch(err){
             console.log(err);
         }
-        // Add logic to process and send form data
+        
        
     };
 

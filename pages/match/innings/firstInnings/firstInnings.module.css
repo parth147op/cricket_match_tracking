@@ -147,3 +147,61 @@
         font-size: 1.5rem;
     }
 } */
+.labelCheckbox {
+    display: block;
+    margin-bottom: 8px;
+    color: #333;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.inputField {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box; /* Ensures padding doesn't affect overall width */
+    font-size: 16px;
+}
+
+.checkboxContainer {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.checkboxLabel {
+    margin-left: 8px;
+    font-size: 16px;
+    margin-bottom:10px;
+}
+
+.checkboxInput {
+    /* Custom checkbox styles */
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: #f0f0f0;
+    /* margin: 0; */
+    font: inherit;
+    color: currentColor;
+    width: 10px;
+    height: 40px;
+    border: 1px solid #c0c0c0;
+    border-radius: 4px;
+    transform: translateY(-0.075em);
+    display: grid;
+    place-content: center;
+}
+
+.checkboxInput:checked {
+    background-color: #4CAF50; /* Change as needed */
+    border-color: #4CAF50; /* Change as needed */
+}
+
+.checkboxInput:checked::before {
+    content: "✔";
+    font-size: 14px;
+    color: white;
+}

@@ -217,7 +217,8 @@ const StartMatch = () => {
                     isPlaying: true,
                     battingOrder: player.battingOrder,
                     isCaptain: player.isCaptain,
-                    isWicketKeeper: player.isWicketKeeper
+                    isWicketKeeper: player.isWicketKeeper,
+                    teamName: teamAName
                 }
                 console.log(playerDetails)
                 playerMatchParticipationPromises.push(axios.patch(`http://localhost:5000/api/v1/match/addPlayers/${matchID}`, playerDetails),{ headers: { 'Content-Type': 'application/json' }})
@@ -228,7 +229,8 @@ const StartMatch = () => {
                     isPlaying: true,
                     battingOrder: player.battingOrder,
                     isCaptain: player.isCaptain,
-                    isWicketKeeper: player.isWicketKeeper
+                    isWicketKeeper: player.isWicketKeeper,
+                    teamName: teamBName
                 }),{ headers: { 'Content-Type': 'application/json' }})
             })
             await Promise.all(playerMatchParticipationPromises);
