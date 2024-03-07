@@ -2,28 +2,30 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import styles from './firstinnings.module.css'; // Make sure the file name starts with a capital letter
-import NextBatsmanModal from '@/components/NextBatsmanModal'; // Ensure the path is correct
 import axios from 'axios';
-import next from 'next';
 const DeliveryInput = () => {
     const router = useRouter();
-    let { totalOvers, strikerBatsman, nonStrikerBatsman, bowler, inningID,matchID, battingTeam, bowlingTeam,ball,inningNumber,over,totalRuns,wickets } = router.query;
-    totalOvers = parseInt(totalOvers, 10);
-ball = parseInt(ball, 10);
-inningNumber = parseInt(inningNumber, 10);
-over = parseInt(over, 10);
-totalRuns = parseInt(totalRuns, 10);
-wickets = parseInt(wickets, 10);
+    const matchID = router.query.matchID;
+    let { inningID,ball} = router.query;
     // State hooks for delivery details
-    const [runs, setRuns] = useState(0);
+    const [battingTeam, setBattingTeam] = useState('');
+    const [bowlingTeam, setBowlingTeam] = useState('');
+    let [strikerBatsman, setStrikerBatsman] = useState('');
+    let [nonStrikerBatsman, setNonStrikerBatsman] = useState('');
+    let [bowler,setBowler] = useState('');
+    let [totalRuns,setTotalRuns] = useState(0);
+    let [runs, setRuns] = useState(0);
+    let [currentOver, setCurrentOver] = useState(0);
+    let [wickets, setWickets] = useState(0);
+    const [totalOvers,setTotalOvers] = useState(0);
     const [extras, setExtras] = useState('None');
     const [dismissal, setDismissal] = useState('None');
     const [runOutBatsman, setRunOutBatsman] = useState('');
     const [nextBatsman, setNextBatsman] = useState('');
     const [fielder, setFielder] = useState('');
     const [onStrike, setOnStrike] = useState(false);
+    const [currentBall, setCurrentBall] = useState(0);
     const [currentOverDeliveries, setCurrentOverDeliveries] = useState([]);
-    const [currentOver, setCurrentOver] = useState(0);
     const [wicketType, setWicketType] = useState('None');
     const [nextBowler, setnextBowler] = useState('');
     const [battingTeamPlayers, setBattingTeamPlayers] = useState([]);
@@ -35,37 +37,127 @@ wickets = parseInt(wickets, 10);
         const fetchMatchPlayers = async() => {
             try{
                 console.log(matchID);
+                console.log(`http://localhost:5000/api/v1/match/players/${matchID}`)
                 const response = await axios.get(`http://localhost:5000/api/v1/match/players/${matchID}`);
-                console.log(response.data.status);
-                let battingTeamPlayers = [], bowlingTeamPlayers = [];
+                // console.log(response.data.data.players);
+                let battingteamplayers = [], bowlingteamplayers = [];
+                // console.log(battingTeam);
+
+                // console.log(response.data.data.players)
                 response.data.data.players.map((player) => {
                     if(player.teamName === battingTeam){
-                        battingTeamPlayers.push(player);
+                        battingteamplayers.push(player);
                     }
                     else if(player.teamName === bowlingTeam){
-                        bowlingTeamPlayers.push(player);
+                        bowlingteamplayers.push(player);
                     }
                 })
-                console.log(battingTeamPlayers, bowlingTeamPlayers)
-                setBattingTeamPlayers(battingTeamPlayers);
-                setBowlingTeamPlayers(bowlingTeamPlayers);
+                // console.log(battingTeamPlayers);
+                // console.log(bowlingTeamPlayers);
+                setBattingTeamPlayers(battingteamplayers);
+                setBowlingTeamPlayers(bowlingteamplayers);
 
+            }catch(err){
+              console.log(err);
+            }
+        }
+        const updateInningStatus = async() => {
+            try{
+                const response = await axios.patch(`http://localhost:5000/api/v1/match/inning/${inningID}`);
+                console.log(response.data.data);
             }catch(err){
                 console.log(err);
             }
         }
-        fetchMatchPlayers();
+        const fetchlatestDelivery = async() => {
+            try{
+                const response = await axios.get(`http://localhost:5000/api/v1/match/latestdeliverydetails?matchID=${matchID}&inningID=${inningID}`);
+                console.log(response.data.data.latestDelivery[0]);
+                let latestDelivery = response.data.data.latestDelivery[0];
+                let batsmans = [strikerBatsman,nonStrikerBatsman];
+                batsmans.forEach((batsman) => {
+                    if(batsman !== latestDelivery.strikerBatsman){
+                        setNonStrikerBatsman(batsman);
+                    }
+                    else{
+                        setStrikerBatsman(batsman);
+                    }
+                    
+                })
+                setCurrentBall(latestDelivery.ball);
+                setBowler(latestDelivery.bowler);
+                setCurrentOver(latestDelivery.over);
+                                
+            }catch(err){
+                console.log(err);
+            }
+        }
+        const fetchInningDetails = async() => {
+            try{
+                console.log(`http://localhost:5000/api/v1/match/${matchID}/innings`)
+            const response = await axios.get(`http://localhost:5000/api/v1/match/${matchID}/innings`)
+            console.log(response.data.data);
+            let innings = response.data.data.innings;
+            if(innings.inningsStarted===false){
+                console.log(innings[0]);
+            setBattingTeam(innings[0].battingTeamName);
+            setBowlingTeam(innings[0].bowlingTeamName);
+            setTotalRuns(innings[0].totalRuns);
+            setTotalOvers(innings[0].totalOvers);
+            setWickets(innings[0].wickets);
+            if(innings[0].inningsStarted===false){
+           
+            setStrikerBatsman(innings[0].currentStrikerBatsmenName);
+            setNonStrikerBatsman(innings[0].currentNonStrikerBatsmenName);
+            setBowler(innings[0].currentBowler);
+            setCurrentOver(0)
+            setCurrentBall(0);
+            console.log(strikerBatsman, nonStrikerBatsman, bowler,totalRuns, currentOver);
+            }
+            else{
+                fetchlatestDelivery();
+            }
+            }
+            }catch(err){
+                console.log(err);
+            }  
+        }
+        
+        fetchInningDetails();
+        fetchlatestDelivery();  
+        fetchMatchPlayers(); 
     }, [matchID]);
+
     const handleSubmit = async(e) => {
         e.preventDefault();
         
         if(extras === 'None' || extras === 'Bye' || extras === 'Leg Bye'){
             ball = ball + 1;
 
+            if(extras === 'None'){
+                setCurrentOverDeliveries([...currentOverDeliveries, runs]);
+            }
+            else if(extras === 'Bye'){
+                const byeRuns = runs+'b';
+                setCurrentOverDeliveries([...currentOverDeliveries, byeRuns]);
+            }
+            else if(extras === 'Leg Bye'){
+                const legByeRuns = runs+'lb';
+                setCurrentOverDeliveries([...currentOverDeliveries, legByeRuns]);
+            }
+
         }
         else if(extras === 'Wide' || extras === 'No Ball'){
             ball = ball;
             totalRuns = totalRuns + 1;
+            if(extras === 'Wide'){
+                const wideRuns = runs+'wd';
+                setCurrentOverDeliveries([...currentOverDeliveries, wideRuns]);
+            }
+            else if(extras === 'No Ball'){
+                const noBallRuns = runs+'nb';
+                setCurrentOverDeliveries([...currentOverDeliveries, noBallRuns]);
+            }
         }
         
         if(ball != 6 && runs%2 === 1){
@@ -121,35 +213,31 @@ wickets = parseInt(wickets, 10);
                 nonStrikerBatsman = temp;
             }
             over = over + 1;
+            ball=0;
+            setCurrentOverDeliveries([]);
         }
-        router.push({
-            pathname:`/match/innings/firstInnings/${matchID}`,
-            query:{
-            totalRuns: totalRuns,
-            strikerBatsman: strikerBatsman,
-            nonStrikerBatsman: nonStrikerBatsman,
-            bowler: bowler,
-            inningID: inningID,
-            inningNumber: inningNumber,
-            battingTeam: battingTeam,
-            ball:ball,
-            bowlingTeam: bowlingTeam,
-            over: over,
-            wickets: wickets
-        }});
-        if (dismissal !== 'None') {
-            // pop up a modal to select th e next batsman
-            // setShowNextBatsmanModal(true);
+        console.log(deliveryDetails)
+         
+        const response = await axios.patch(`http://localhost:5000/api/v1/match/${matchID}/${inningID}/delivery`, deliveryDetails);  
 
-            // set the nextBatsman state
-
-            // update the strikerBatsman and nonStrikerBatsman
-            // update the onStrike state
+        console.log(response.data.data);
+        if(response.data.status === 'success'){
+            router.push({
+                pathname:`/match/innings/firstInnings/${matchID}`,
+                query:{
+                totalRuns: totalRuns,
+                strikerBatsman: strikerBatsman,
+                nonStrikerBatsman: nonStrikerBatsman,
+                bowler: bowler,
+                inningID: inningID,
+                inningNumber: inningNumber,
+                battingTeam: battingTeam,
+                ball:ball,
+                bowlingTeam: bowlingTeam,
+                over: over,
+                wickets: wickets
+            }});
         }
-
-        // Add your logic to update the Deliveries collection here
-        // Once the delivery details are submitted, update the strikerBatsman, nonStrikerBatsman, bowler, and totalOvers in the database
-        // Then, redirect to the same page to input the next delivery details
 
     };
 
@@ -180,8 +268,7 @@ wickets = parseInt(wickets, 10);
         })
         return fielder;
     }
-    const dummyDeliveries = ['4', '3', '5wd', '-', '1', '2'];
-
+    
     return (
         <div className={styles.container}>
             <h1 className={styles.title}>Delivery Input</h1>
@@ -208,7 +295,15 @@ wickets = parseInt(wickets, 10);
                     </div>
                     <div className={styles.score}>
                         <label>Score</label>
-                        <p>15-1</p>
+                        <p>{totalRuns}-{wickets}</p>
+                    </div>
+                    <div className={styles.score}>
+                        <label>Over</label>
+                        <p>{currentOver}</p>
+                    </div>
+                    <div className={styles.score}>
+                        <label>Ball</label>
+                        <p>{ball}</p>
                     </div>
                 </div>
             </div>
@@ -216,8 +311,8 @@ wickets = parseInt(wickets, 10);
             <div className={styles.matchState}>
                 <h2 className={styles.overTitle}>This Over:</h2>
                 <div className={styles.balls}>
-                    {dummyDeliveries.map((delivery, index) => (
-                        <span key={index} className={styles.ball}>
+                    {currentOverDeliveries.map((delivery) => (
+                        <span key={delivery} className={styles.ball}>
                             {delivery}
                         </span>
                     ))}

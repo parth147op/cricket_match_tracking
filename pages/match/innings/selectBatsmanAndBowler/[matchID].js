@@ -113,7 +113,7 @@ const Index = () => {
         if (response.data.status === 'success') {
           const inningID = response.data.data.innings._id;
           router.push({
-            pathname: `/match/innings/firstInnings/${matchID}`,
+            pathname: `/match/innings/firstInnings/${matchID}/${inningID}/`,
             query: {
               totalOvers: totalOvers,
               strikerBatsman: strikerBatsman,
@@ -126,6 +126,7 @@ const Index = () => {
               bowlingTeam: bowlingTeam,
               over: 0,
               totalRuns: 0,
+              wickets:0
             },
           });
           // passing the strikerBatsman, nonStrikerBatsman, bowler, inningID, matchID, totalOvers.
